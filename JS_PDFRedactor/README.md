@@ -1,9 +1,9 @@
 # Javascript PDF Redactor
 
 This project was done by three tools. 
-	[dropzone](https://github.com/enyo/dropzone) to uploade the PDF file.
-	[PDF.js](https://github.com/mozilla/pdf.js/) to process the PDF file.
-	[jsPDF](https://github.com/MrRio/jsPDF) to download the redacted PDF file.
+	[dropzone](https://github.com/enyo/dropzone) to uploade the PDF file.<br/>
+	[PDF.js](https://github.com/mozilla/pdf.js/) to process the PDF file.<br/>
+	[jsPDF](https://github.com/MrRio/jsPDF) to download the redacted PDF file.<br/>
 
 ## Usage
 	1. You can simply use this tool to redact your PDF file. [Demo](#)
