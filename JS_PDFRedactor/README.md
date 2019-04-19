@@ -1,6 +1,6 @@
 # Javascript PDF Redactor
 
-This project was done by three tools. 
+This project was done by three tools. <br/>
 	[dropzone](https://github.com/enyo/dropzone) to uploade the PDF file.<br/>
 	[PDF.js](https://github.com/mozilla/pdf.js/) to process the PDF file.<br/>
 	[jsPDF](https://github.com/MrRio/jsPDF) to download the redacted PDF file.<br/>
