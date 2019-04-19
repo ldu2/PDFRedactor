@@ -32,7 +32,7 @@ Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protrac
 <pre>
 App<br/>
 |--redactor<br/>
-    |--dropzone
+   |--dropzone
 </pre>
 ## Usage
 	1. You can simply use this tool to redact your PDF file. [Demo](#)
