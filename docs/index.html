@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale = 1.0, maximum-scale = 1.0, user-scalable=no">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    <script src="pdf.js"></script>
+    <script src="pdf.worker.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.5.1/dropzone.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.5.1/dropzone.css">
+    <style type="text/css">
+#upload-button {
+  width: 150px;
+  display: block;
+  margin: 20px 45%;
+}
+
+#pdf-main-container {
+  margin: 20px auto;
+}
+
+#pdf-loader {
+
+  text-align: center;
+  color: #999999;
+  font-size: 13px;
+  line-height: 100px;
+}
+
+#pdf-contents {
+
+}
+
+#pdf-meta {
+  overflow: hidden;
+  margin: 0 0 20px 0;
+}
+
+.pdf-buttons {
+  float: left;
+}
+
+#page-count-container {
+  float: right;
+}
+
+#pdf-current-page {
+  display: inline;
+}
+
+#pdf-total-pages {
+  display: inline;
+}
+
+#canvas-container{
+  width: 100%;
+  text-align: center;
+  margin: auto;
+}
+
+canvas {
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  box-sizing: border-box;
+}
+
+#page-loader {
+  height: 100px;
+  line-height: 100px;
+  text-align: center;
+  color: #999999;
+  font-size: 13px;
+}
+
+#download-image {
+  width: 150px;
+  text-align: center;
+  float:right;
+}
+
+
+    </style>
+</head>
+
+<body>
+<h2 style="text-align:center;">PDF File Redactor</h2>
+<div style="min-height:50px">
+<div class="pdf-buttons">
+  <button id="pdf-undo" onclick="undoAction()">Undo</button>
+  <button id="pdf-redo">Redo</button>
+</div>
+<button id="download-image">Download PDF </button>
+</div>
+
+<div class="dropzone dz-single dz-clickable" id="dZUpload" style="text-align:center;">
+	<div class="dz-wrapper dz-multiple">
+		<div class="dz-message">
+			<div class="dz-text">Click Here to Upload a File <br> Only ONE PDF File is Allowed</div>
+		</div>
+	</div>
+</div>
+<div id="pdf-main-container">
+    <div id="pdf-contents">
+        <div id="pdf-meta">
+            <div id="pdf-buttons">
+                <button id="pdf-prev">Previous</button>
+                <button id="pdf-next">Next</button>
+            </div>
+            <div id="page-count-container">Page
+                <div id="pdf-current-page"></div>
+                of
+                <div id="pdf-total-pages"></div>
+            </div>
+        </div>
+	<div id="pdf-loader">Loading document ...</div>
+        <canvas id="pdf-canvas"></canvas>
+	<div id="page-loader">Loading page ...</div>
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js"
+        integrity="sha384-NaWTHo/8YCBYJ59830LTz/P4aQZK1sS0SneOgAvhsIl3zBu8r9RevNg5lHCHAuQ/"
+        crossorigin="anonymous"></script>
+<script>
+
+  var __PDF_DOC,
+          __CURRENT_PAGE,
+          __TOTAL_PAGES,
+          __PAGE_RENDERING_IN_PROGRESS = 0,
+          __CANVAS = $('#pdf-canvas').get(0),
+          __CANVAS_CTX = __CANVAS.getContext('2d'),
+          renderContext, allPages=[];
+  const img = new Image;
+  var buff = [], storedRects=[]; //so far we only deal with single page editor, if multipaged. we will need to update
+  //to update the redo and undo structure, with multi buffs, or we just commit the change, and forget about re-editing
+
+  // Upon click this should should trigger click on the #file-to-upload file input element
+  function cleanCanvas(){
+    __CANVAS_CTX.clearRect(0, 0, __CANVAS_CTX.canvas.width, __CANVAS_CTX.canvas.height);
+    img.src = __CANVAS.toDataURL();
+  }
+  // Previous action on the PDF
+  function undoAction(){
+    if(storedRects.length>0){
+      buff.push(storedRects.pop());
+    }
+  };
+
+  function preloadAllPages() {
+    allPages = [];
+    for (let i = 1 ; i <= __TOTAL_PAGES; i++) {
+      __PDF_DOC.getPage(i).then(function (page) {
+        const width = window.screen.availWidth - 50;
+        // As the canvas is of a fixed width we need to set the scale of the viewport accordingly
+        const scale_required = width / page.getViewport(1).width;
+        // Get viewport of the page at required scale //the scale is the % in the pdf file
+        const viewport = page.getViewport(scale_required);
+        const canv = document.createElement('canvas');
+        const canv_con = canv.getContext('2d');
+        // Set canvas width
+        // Set canvas height
+        canv.width = width;
+        canv.height = viewport.height;
+
+        const renderContext = {
+          canvasContext: canv_con,
+          viewport: viewport
+        };
+        // Render the page contents in the canvas
+        page.render(renderContext).then(function () {
+          allPages.push(canv);
+        });
+      });
+    }
+  }
+
+  // Next action on the PDF
+  $("#pdf-redo").on('click', function () {
+    if(buff.length>0){
+      storedRects.push(buff.pop());
+    }
+  });
+
+  // Previous page of the PDF
+  $("#pdf-prev").on('click', function () {
+    if (__CURRENT_PAGE != 1){
+      cleanCanvas();
+      showPage(--__CURRENT_PAGE, true);
+    }
+  });
+
+  // Next page of the PDF
+  $("#pdf-next").on('click', function () {
+    if (__CURRENT_PAGE != __TOTAL_PAGES){
+      cleanCanvas();
+      showPage(++__CURRENT_PAGE, true);
+    }
+  });
+  // Download button
+  $("#download-image").on('click', function () {
+    let width = __CANVAS.width;
+    let height = __CANVAS.height;
+
+    //set the height and width for the output pdf file
+    if(width > height){
+      pdf = new jsPDF('l', 'px', [width, height]);
+    }
+    else{
+      pdf = new jsPDF('p', 'px', [height, width]);
+    }
+    width = pdf.internal.pageSize.getWidth();
+    height = pdf.internal.pageSize.getHeight();
+    for (let i = 0; i < allPages.length; i++) {
+      pdf.addImage(allPages[i], 'PNG', 0, 0, width, height);
+      if (i < (allPages.length - 1)) {
+        pdf.addPage();  // this adds a new page
+      }
+    }
+    pdf.save("download.pdf");
+  });
+
+  function showPDF(pdf_url) {
+    PDFJS.getDocument(pdf_url).promise.then(function (pdf_doc) {
+      __PDF_DOC = pdf_doc;
+      __TOTAL_PAGES = __PDF_DOC.numPages;
+      $("#pdf-total-pages").text(__TOTAL_PAGES);
+      // Show the first page
+      showPage(1, false);
+      preloadAllPages();
+    }).catch(function (error) {
+      // If error re-show the upload button
+      alert(error.message);
+    });
+  }
+
+  function hideCanvas(){
+    // Disable Prev & Next buttons while page is being loaded
+    $("#pdf-next, #pdf-prev, #pdf-redo, #pdf-undo").attr('disabled', 'disabled');
+    // While page is being rendered hide the canvas and show a loading message
+    $("#pdf-canvas").hide();
+    $("#pdf-loader").hide();
+    $("#page-count-container").hide();
+    $("#download-image").hide();
+    $("#page-loader").hide();
+  }
+  function showCanvas() {
+    // Re-enable Prev & Next buttons
+    $('.pdf-buttons').show();
+    $("#pdf-next, #pdf-prev, #pdf-redo, #pdf-undo").removeAttr('disabled');
+    // Show the canvas and hide the page loader
+    $("#pdf-canvas").show();
+    $("#pdf-loader").hide();
+    $("#page-count-container").show();
+    $("#download-image").show();
+    $("#page-loader").hide();
+  }
+  function showPage(page_no, prev) {
+    storedRects=[];
+    buff = [];
+    __PAGE_RENDERING_IN_PROGRESS = 1;
+    __CURRENT_PAGE = page_no;
+    // Update current page in HTML
+    $("#page-loader").show();
+    $("#pdf-current-page").text(page_no);
+    // Fetch the page
+    __PDF_DOC.getPage(page_no).then(function (page) {
+      const width = window.screen.availWidth-50;
+      // As the canvas is of a fixed width we need to set the scale of the viewport accordingly
+      var scale_required = width / page.getViewport(1).width;
+      // Get viewport of the page at required scale //the scale is the % in the pdf file
+      var viewport = page.getViewport(scale_required);
+
+      // Set canvas width
+      // Set canvas height
+      __CANVAS.width = width;
+      __CANVAS.height = viewport.height;
+
+      renderContext = {
+        canvasContext: __CANVAS_CTX,
+        viewport: viewport
+      };
+      // Render the page contents in the canvas
+      page.render(renderContext).then(function () {
+        __PAGE_RENDERING_IN_PROGRESS = 0;
+        if (prev) {
+          img.src = allPages[page_no - 1].toDataURL();
+        } else {
+          img.src = __CANVAS.toDataURL();
+        }
+      })
+    });
+  }
+
+  $(document).ready(function selection() {
+    "use strict";
+    hideCanvas();
+    Dropzone.autoDiscover = false;
+    $("#dZUpload").dropzone({
+      url: "upload_holder",
+      addRemoveLinks: true,
+      acceptedFiles: ".pdf",
+      maxFiles:1,
+      success: function (file, response) {
+        console.log(response);
+      },
+      error: function (file, response) {
+        console.log(response);
+      },
+      init:function(){
+        this.on("maxfilesexceeded", function(file){
+          alert("No more files please!");
+          this.removeFile(file);
+        });
+        this.on('addedfile',function(file){
+          $("#pdf-loader").show();
+          if ('application/pdf' != file.type) {
+            alert('Error : Not a PDF');
+            this.removeFile(file);
+          }
+          else
+            showPDF(URL.createObjectURL(this.files[0]));
+        });
+        this.on("removedfile", function(file) {
+	  if ('application/pdf' == file.type) {
+		allPages = [];
+		cleanCanvas();
+		hideCanvas();
+	  }
+        });
+      }
+    });
+
+    requestAnimationFrame(mainLoop);
+    const canvas = document.getElementById("pdf-canvas");
+    const ctx = canvas.getContext("2d");
+    const baseImage = img;
+    const rect = (() => {
+      var x1, y1, x2, y2;
+    var show = false;
+
+    function fix() {
+      rect.x = Math.min(x1, x2);
+      rect.y = Math.min(y1, y2);
+      rect.w = Math.max(x1, x2) - Math.min(x1, x2);
+      rect.h = Math.max(y1, y2) - Math.min(y1, y2);
+    }
+
+    function draw(ctx) {
+      ctx.fillRect(this.x, this.y, this.w, this.h);
+    }
+
+    const rect = {x: 0, y: 0, w: 0, h: 0, draw};
+    const API = {
+      restart(point) {
+        x2 = x1 = point.x;
+        y2 = y1 = point.y;
+        fix();
+        show = true;
+      },
+      update(point) {
+        x2 = point.x;
+        y2 = point.y;
+        fix();
+        show = true;
+      },
+      toRect() {
+        show = false;
+        return Object.assign({}, rect);
+      },
+      draw(ctx) {
+        if (show) {
+          rect.draw(ctx)
+        }
+      },
+      show: false,
+    }
+    return API;
+  })();
+
+    const mouse = {
+      button: false,
+      x: 0,
+      y: 0,
+      down: false,
+      up: false,
+      element: null,
+      event(e) {
+        var rectCanv = canvas.getBoundingClientRect();
+        const m = mouse;
+        m.x = (e.clientX - rectCanv.left) / (rectCanv.right - rectCanv.left) * canvas.width;
+        m.y = (e.clientY - rectCanv.top) / (rectCanv.bottom - rectCanv.top) * canvas.height;
+        const prevButton = m.button;
+        m.button = e.type === "mousedown" ? true : e.type === "mouseup" ? false : mouse.button;
+        if (!prevButton && m.button) {
+          m.down = true;
+        }
+        if (prevButton && !m.button) {
+          m.up = true;
+        }
+      },
+      start(element) {
+        mouse.element = element;
+        "down,up,move".split(",").forEach(name => document.addEventListener("mouse" + name, mouse.event));
+      }
+    }
+
+    mouse.start(canvas);
+
+    function draw() {
+      ctx.drawImage(baseImage, 0, 0, ctx.canvas.width, ctx.canvas.height);
+      ctx.lineWidth = 1;
+      ctx.strokeStyle = "black";
+      storedRects.forEach(rect => rect.draw(ctx));
+      ctx.strokeStyle = "red";
+      rect.draw(ctx);
+    }
+    function mainLoop() {
+      var refresh = true;
+      if(__TOTAL_PAGES == allPages.length)
+	showCanvas();
+      if (refresh || mouse.down || mouse.up || mouse.button) {
+        refresh = false;
+        if (mouse.down) {
+          mouse.down = false;
+          rect.restart(mouse);
+        } else if (mouse.button) {
+          rect.update(mouse);
+        } else if (mouse.up) {
+          mouse.up = false;
+          rect.update(mouse);
+          let tempRect = rect.toRect();
+          const m = mouse;
+          if(isFinite(tempRect.x) && isFinite(tempRect.y) && isFinite(tempRect.w) && isFinite(tempRect.h)
+                  && tempRect.w!=0 && tempRect.h != 0
+                  && m.x >0 && m.x<__CANVAS.width && m.y>0 && m.y<__CANVAS.height) {//only if the mouse land in the canvas,ok
+            storedRects.push(tempRect);
+            buff = [] //once the editor start to edit, the editor commits to the change so far, so redo is emptied out
+	      const canv = document.createElement('canvas');
+	      const canv_con = canv.getContext('2d');
+	      canv.width = __CANVAS_CTX.canvas.width;
+	      canv.height = __CANVAS_CTX.canvas.height;
+	      canv_con.drawImage(__CANVAS, 0, 0, __CANVAS_CTX.canvas.width, __CANVAS_CTX.canvas.height);
+	      allPages[__CURRENT_PAGE - 1] = canv;
+          }
+        }
+        draw();
+      }
+      requestAnimationFrame(mainLoop)
+    }
+  })
+
+</script>
+
+</body>
+</html>
