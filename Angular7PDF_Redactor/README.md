@@ -1,10 +1,10 @@
 # Angular 7 PDF Redactor
 
-This project was initially generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.2.3.
-This project was done by three tools. 
-	[ngx-dropzone-wrapper](https://github.com/zefoy/ngx-dropzone-wrapper) to uploade the PDF file.
-	[PDF.js](https://github.com/mozilla/pdf.js/) to process the PDF file.
-	[jsPDF](https://github.com/MrRio/jsPDF) to download the redacted PDF file.
+This project was initially generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.2.3.<br/>
+This project was done by three tools. <br/>
+	[ngx-dropzone-wrapper](https://github.com/zefoy/ngx-dropzone-wrapper) to uploade the PDF file.<br/>
+	[PDF.js](https://github.com/mozilla/pdf.js/) to process the PDF file.<br/>
+	[jsPDF](https://github.com/MrRio/jsPDF) to download the redacted PDF file.<br/>
 
 ## Run the redactor
 
@@ -28,17 +28,18 @@ Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protrac
 
 ## Implementation
 
-###Components
-App
-|--redactor
-    |--dropzone
-
+### Components
+<pre>
+App<br/>
+|--redactor<br/>
+   |--dropzone
+</pre>
 ## Usage
 	1. You can simply use this tool to redact your PDF file. [Demo](#)
 	2. You can use this app as a whole component in your own app to redact pdf file.
 	3. You can learn something from the tool,i.e., manipulating PDF file with canvas.
-###Note:
-	**Once you move on to the next page. The redaction is set on the page.**
-	**The larger the resolution of the screen, the better quality of the file maintains.**
-	The result is almost the same as the [JS_PDFRedactor](https://github.com/ldu2/PDFRedactor/tree/master/JS_PDFRedactor)
+### Note:
+**Once you move on to the next page. The redaction is set on the page.**<br/>
+**The larger the resolution of the screen, the better quality of the file maintains.**<br/>
+The result is almost the same as the [JS_PDFRedactor](https://github.com/ldu2/PDFRedactor/tree/master/JS_PDFRedactor)
 
