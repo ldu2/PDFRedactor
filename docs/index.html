@@ -8,7 +8,10 @@
     <script src="pdf.worker.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.5.1/dropzone.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.5.1/dropzone.css">
-    <style type="text/css">
+   <style type="text/css">
+html, body{
+    height: 100%
+}
 #upload-button {
   width: 150px;
   display: block;
@@ -76,8 +79,16 @@ canvas {
   text-align: center;
   float:right;
 }
-
-
+.footer {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding: 0.5rem;
+  font-size: 0.8rem;
+  background-color: #efefef;
+  text-align: center;
+}
     </style>
 </head>
 
@@ -116,8 +127,7 @@ canvas {
 	<div id="page-loader">Loading page ...</div>
     </div>
 </div>
-<footer>When you upload your file, you are not sending it anywhere. 
-	The browser is only using it as input to edit it. The files only stays in your computer.
+<footer class="footer">NOTE: The file is ONLY in your computer. NOT SENT ANYWHERE.
 </footer>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js"
         integrity="sha384-NaWTHo/8YCBYJ59830LTz/P4aQZK1sS0SneOgAvhsIl3zBu8r9RevNg5lHCHAuQ/"
