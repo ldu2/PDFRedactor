@@ -35,9 +35,9 @@ App<br/>
    |--dropzone
 </pre>
 ## Usage
-	1. You can simply use this tool to redact your PDF file. [Demo](#)
-	2. You can use this app as a whole component in your own app to redact pdf file.
-	3. You can learn something from the tool,i.e., manipulating PDF file with canvas.
+1. You can simply use this tool to redact your PDF file. [Demo](https://ldu2.github.io/PDFRedactor/)<br/>
+2. You can use this app as a whole component in your own app to redact pdf file.<br/>
+3. You can learn something from the tool,i.e., manipulating PDF file with canvas.<br/>
 ### Note:
 **Once you move on to the next page. The redaction is set on the page.**<br/>
 **The larger the resolution of the screen, the better quality of the file maintains.**<br/>
