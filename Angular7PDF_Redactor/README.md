@@ -1,14 +1,18 @@
-# AngularRedactor
+# Angular 7 PDF Redactor
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.2.3.
+This project was initially generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.2.3.
+This project was done by three tools. 
+	[ngx-dropzone-wrapper](https://github.com/zefoy/ngx-dropzone-wrapper) to uploade the PDF file.
+	[PDF.js](https://github.com/mozilla/pdf.js/) to process the PDF file.
+	[jsPDF](https://github.com/MrRio/jsPDF) to download the redacted PDF file.
+
+## Run the redactor
+
+First, run `npm install` to install the libraries. Then, run `npm start` to run the project. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
 ## Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
-
-## Code scaffolding
-
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
 
 ## Build
 
@@ -22,6 +26,19 @@ Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.
 
 Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
 
-## Further help
+## Implementation
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+###Components
+App
+|--redactor
+    |--dropzone
+
+## Usage
+	1. You can simply use this tool to redact your PDF file. [Demo](#)
+	2. You can use this app as a whole component in your own app to redact pdf file.
+	3. You can learn something from the tool,i.e., manipulating PDF file with canvas.
+###Note:
+	**Once you move on to the next page. The redaction is set on the page.**
+	**The larger the resolution of the screen, the better quality of the file maintains.**
+	The result is almost the same as the [JS_PDFRedactor](https://github.com/ldu2/PDFRedactor/tree/master/JS_PDFRedactor)
+
