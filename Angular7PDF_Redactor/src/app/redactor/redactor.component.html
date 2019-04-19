@@ -1,0 +1,35 @@
+<h2 style="text-align:center;">PDF File Redactor</h2>
+<div [style.min-height]="'50px'">
+<div class="pdf-buttons" [style.display]="show && __TOTAL_PAGES==allPages.length?'block':'none'">
+  <button id="pdf-prev" (click)="prevPage()">Previous</button>
+  <button id="pdf-next" (click)="nextPage()">Next</button>
+</div>
+<button id="download-image" (click)="downloadFile()"
+        [style.display]="show && __TOTAL_PAGES==allPages.length?'block':'none'" [disabled]="show && __TOTAL_PAGES!=allPages.length">Download PDF
+</button>
+</div>
+<div style="text-align: center;">
+  <button id="upload-button" (click)="uploadFile()" [style.display]="'none'">Select PDF</button>
+  <app-drop-zone (fileEvent)="captureFile($event)" (removeFileEvent)="removeFile($event)" ></app-drop-zone>
+</div>
+<div id="pdf-main-container" (mousedown)="mouse.event($event)"
+     (mouseup)="mouse.event($event)" (mousemove)="mouse.event($event)">
+  <div id="pdf-contents">
+    <div id="pdf-loader" [style.display]="show && __TOTAL_PAGES!=allPages.length?'block':'none'">Loading document ...</div>
+    <div id="pdf-meta">
+      <div class="pdf-buttons" [style.display]="show && __TOTAL_PAGES==allPages.length?'block':'none'">
+        <button id="pdf-undo" (click)="undoAction()">Undo</button>
+        <button id="pdf-redo" (click)="redoAction()">Redo</button>
+      </div>
+      <div id="page-count-container" [style.display]="show && __TOTAL_PAGES==allPages.length?'block':'none'">
+        <div id="pdf-current-page"></div>
+        Page {{__CURRENT_PAGE}}
+        <div id="pdf-total-pages"></div>
+        of {{__TOTAL_PAGES}}
+      </div>
+    </div>
+    <div id="canvas-container" [style.display]="show && __TOTAL_PAGES==allPages.length?'block':'none'">
+      <canvas #myCanvas>
+      </canvas></div>
+  </div>
+</div>

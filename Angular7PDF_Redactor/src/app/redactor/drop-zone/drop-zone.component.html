@@ -1,0 +1,3 @@
+<dropzone [dropzone]="DEFAULT_DROPZONE_CONFIG" class="dropzone" (success)="fileUploadSuccess($event)"
+  (removedFile)="removeFile($event)" (error)="fileUploadError($event)" [message]="message">
+</dropzone>

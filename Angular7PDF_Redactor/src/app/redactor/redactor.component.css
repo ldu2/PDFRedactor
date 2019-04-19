@@ -1,0 +1,71 @@
+#upload-button {
+  width: 150px;
+  display: block;
+  margin: 20px 45%;
+}
+
+#file-to-upload {
+
+}
+
+#pdf-main-container {
+  margin: 20px auto;
+}
+
+#pdf-loader {
+
+  text-align: center;
+  color: #999999;
+  font-size: 13px;
+  line-height: 100px;
+}
+
+#pdf-contents {
+
+}
+
+#pdf-meta {
+  overflow: hidden;
+  margin: 0 0 20px 0;
+}
+
+.pdf-buttons {
+  float: left;
+}
+
+#page-count-container {
+  float: right;
+}
+
+#pdf-current-page {
+  display: inline;
+}
+
+#pdf-total-pages {
+  display: inline;
+}
+
+#canvas-container{
+  width: 100%;
+  text-align: center;
+  margin: auto;
+}
+
+canvas {
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  box-sizing: border-box;
+}
+
+#page-loader {
+  height: 100px;
+  line-height: 100px;
+  text-align: center;
+  color: #999999;
+  font-size: 13px;
+}
+
+#download-image {
+  width: 150px;
+  text-align: center;
+  float:right;
+}

@@ -1,0 +1,5 @@
+.dropzone{
+  min-height:150px;
+  box-sizing:border-box;
+  border:2px solid rgba(0, 0, 0, 0.3);
+}
