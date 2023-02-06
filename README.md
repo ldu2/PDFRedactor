@@ -9,4 +9,4 @@ and you can cover up whatever you want on your pdf file and download it as the m
 When you upload your file, **you are not sending it anywhere**. The browser is only using it as input to edit it. **The files only stays in your computer.**
 
 ## Google Analytics
-Added Google tag to track the traffic of the public demo page. If you are forking the entire repo (not recommanded) instead of the specific version of the PDFRedactor, please REMOVE the tag from /doc/index.html
+Added Google tag to track the traffic of the public demo page. If you are forking the entire repo instead of the specific build (Angular7/JS) of the PDFRedactor, please REMOVE the tag from /docs/index.html
