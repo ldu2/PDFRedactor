@@ -1,6 +1,7 @@
 import {AfterViewInit, Component, ElementRef, Injectable, NgZone, ViewChild} from '@angular/core';
-import * as PDFJS from 'pdfjs-dist/webpack';
-import * as jsPDF from 'jspdf';
+import pdfjsWorker from 'pdfjs-dist/build/pdf.worker.entry'
+import * as PDFJS from 'pdfjs-dist';
+import {jsPDF} from 'jspdf';
 
 @Component({
   selector: 'app-redactor',
@@ -196,6 +197,7 @@ export class RedactorComponent implements AfterViewInit {
 
   showPDF(pdf_url): void {
     const that = this;
+    PDFJS.GlobalWorkerOptions.workerSrc = pdfjsWorker;
     PDFJS.getDocument(pdf_url).promise.then(function (pdf_doc) {
       that.__PDF_DOC = pdf_doc;
       that.__TOTAL_PAGES = that.__PDF_DOC.numPages;
