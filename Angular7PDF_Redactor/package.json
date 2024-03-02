@@ -22,7 +22,6 @@
     "core-js": "^2.5.4",
     "jspdf": "^2.5.1",
     "ngx-dropzone-wrapper": "^7.2.1",
-    "pdfjs-dist": "^4.0.379",
     "rxjs": "~6.5.3",
     "tslib": "^1.9.0",
     "zone.js": "~0.11.4"
