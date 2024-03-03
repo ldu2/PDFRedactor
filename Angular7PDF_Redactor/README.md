@@ -1,10 +1,13 @@
-# Angular 7 PDF Redactor
+# Angular 13 PDF Redactor
 
-This project was initially generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.2.3.<br/>
-This project was done by three tools. <br/>
-	[ngx-dropzone-wrapper](https://github.com/zefoy/ngx-dropzone-wrapper) to uploade the PDF file.<br/>
-	[PDF.js](https://github.com/mozilla/pdf.js/) to process the PDF file.<br/>
-	[jsPDF](https://github.com/MrRio/jsPDF) to download the redacted PDF file.<br/>
+## Runtime requirements
+```
+$ node --version
+v20.11.1
+
+$ npm --version
+10.2.4
+```
 
 ## Run the redactor
 
@@ -42,6 +45,6 @@ App<br/>
 **Once you move on to the next page. The redaction is set on the page.**<br/>
 **The larger the resolution of the screen, the better quality of the file maintains.**<br/>
 The result is almost the same as the [JS_PDFRedactor](https://github.com/ldu2/PDFRedactor/tree/master/JS_PDFRedactor)<br/>
-For the Angular 7 version of pdf file redactor. When upload a file, I am using http://httpbin.org/post as the POST endpoint. No responsibility taken for the safety of the file posted to that end point.<br/>
+For the Angular 13 version of pdf file redactor. When upload a file, I am using https://httpbin.org/post as the POST endpoint. No responsibility taken for the safety of the file posted to that end point.<br/>
 If you wish you send it to your server, simply clone the repo and modify the code. Simply change the download button to send a POST request.
 
