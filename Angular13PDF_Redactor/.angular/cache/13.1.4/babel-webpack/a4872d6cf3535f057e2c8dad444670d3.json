@@ -1,0 +1,1 @@
+{"ast":null,"code":"var AFMFont = require('../lib/font/afm');\nmodule.exports = new AFMFont(require('./Helvetica.json'));","map":null,"metadata":{},"sourceType":"script"}

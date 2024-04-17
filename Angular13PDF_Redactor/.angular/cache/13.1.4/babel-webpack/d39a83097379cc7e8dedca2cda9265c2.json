@@ -1,0 +1,1 @@
+{"ast":null,"code":"exports.parse = function (xref, lexer, trial) {\n  var isNull = lexer.getString(4) === \"null\";\n  if (!isNull) {\n    if (trial) {\n      return undefined;\n    }\n    throw new Error(\"Invalid null\");\n  }\n  lexer.shift(4);\n  return null;\n};","map":null,"metadata":{},"sourceType":"script"}

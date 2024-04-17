@@ -1,0 +1,1 @@
+{"ast":null,"code":"\"use strict\";\n\nexports.Document = require(\"./document\");\nexports.Font = require(\"./font/otf\");\nexports.Image = require(\"./image/image\");\nexports.ExternalDocument = require(\"./external\");\nexports.mm = 0.0393700787 * 72;\nexports.cm = exports.mm * 10;","map":null,"metadata":{},"sourceType":"script"}
