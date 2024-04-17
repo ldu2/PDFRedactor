@@ -20,6 +20,8 @@
       <div class="pdf-buttons" [style.display]="show && __TOTAL_PAGES==allPages.length?'block':'none'">
         <button id="pdf-undo" (click)="undoAction()">Undo</button>
         <button id="pdf-redo" (click)="redoAction()">Redo</button>
+        <label for="fill-color">&nbsp;&nbsp;&nbsp;Fill Color:</label>
+        <input type="color" id="fill-color" name="fill-color" [(ngModel)]="this.fillColor" />
       </div>
       <div id="page-count-container" [style.display]="show && __TOTAL_PAGES==allPages.length?'block':'none'">
         <div id="pdf-current-page"></div>

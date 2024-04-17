@@ -28,6 +28,7 @@ export class RedactorComponent implements AfterViewInit {
   public rectT;
   public show = false;
   public refresh = true;
+  public fillColor="#000000";
   public mouse = {
     button: false,
     x: 0,
@@ -60,11 +61,13 @@ export class RedactorComponent implements AfterViewInit {
         if (that.refresh || that.mouse.down || that.mouse.up || that.mouse.button) {
            that.refresh = false;
           if (that.mouse.down) {
+            that.__CANVAS_CTX.fillStyle = that.fillColor+"80";
             that.mouse.down = false;
             that.rectT.restart(that.mouse);
           } else if (that.mouse.button) {
             that.rectT.update(that.mouse);
           } else if (that.mouse.up) {
+            that.__CANVAS_CTX.fillStyle = that.fillColor;
             that.mouse.up = false;
             that.rectT.update(that.mouse);
             const tempRect = that.rectT.toRect();
@@ -186,7 +189,7 @@ export class RedactorComponent implements AfterViewInit {
     width = pdf.internal.pageSize.getWidth();
     height = pdf.internal.pageSize.getHeight();
     for (let i = 0; i < this.allPages.length; i++) {
-      pdf.addImage(this.allPages[i], 'PNG', 0, 0, width, height);
+      pdf.addImage(this.allPages[i], 'PNG', 0, 0, width, height, "", "FAST");
       if (i < (this.allPages.length - 1)) {
         pdf.addPage();  // this adds a new page
       }
