@@ -28,6 +28,7 @@ export class RedactorComponent implements AfterViewInit {
   public rectT;
   public show = false;
   public refresh = true;
+  public fillColor="#000000";
   public mouse = {
     button: false,
     x: 0,
@@ -72,6 +73,8 @@ export class RedactorComponent implements AfterViewInit {
             if (isFinite(tempRect.x) && isFinite(tempRect.y) && isFinite(tempRect.w) && isFinite(tempRect.h)
               && tempRect.w !== 0 && tempRect.h !== 0 // only if the mouse land in the canvas,ok
               && m.x > 0 && m.x < that.__CANVAS.nativeElement.width && m.y > 0 && m.y < that.__CANVAS.nativeElement.height) {
+              that.__CANVAS_CTX.fillStyle = that.fillColor;
+              tempRect.draw(that.__CANVAS_CTX);
               that.storedRects.push(tempRect);
               that.buff = []; // once the editor start to edit, the editor commits to the change so far, so redo is emptied out
               const canv = document.createElement('canvas');
@@ -186,7 +189,7 @@ export class RedactorComponent implements AfterViewInit {
     width = pdf.internal.pageSize.getWidth();
     height = pdf.internal.pageSize.getHeight();
     for (let i = 0; i < this.allPages.length; i++) {
-      pdf.addImage(this.allPages[i], 'PNG', 0, 0, width, height);
+      pdf.addImage(this.allPages[i], 'PNG', 0, 0, width, height, "", "FAST");
       if (i < (this.allPages.length - 1)) {
         pdf.addPage();  // this adds a new page
       }
@@ -246,12 +249,16 @@ export class RedactorComponent implements AfterViewInit {
     this.__CANVAS_CTX.drawImage(this.img, 0, 0, this.__CANVAS_CTX.canvas.width, this.__CANVAS_CTX.canvas.height);
     this.__CANVAS_CTX.lineWidth = 1;
     this.__CANVAS_CTX.strokeStyle = 'black';
+    this.__CANVAS_CTX.fillStyle = this.fillColor;
     this.storedRects.forEach(rect2 => rect2.draw(this.__CANVAS_CTX));
+    this.__CANVAS_CTX.fillStyle = this.fillColor+"80";
     this.__CANVAS_CTX.strokeStyle = 'red';
     this.rectT.draw(this.__CANVAS_CTX);
+    this.__CANVAS_CTX.fillStyle = this.fillColor;
   }
   cleanCanvas(): void {
     this.__CANVAS_CTX.clearRect(0, 0, this.__CANVAS_CTX.canvas.width, this.__CANVAS_CTX.canvas.height);
+    this.fillColor="#000000";
     this.img.src = this.__CANVAS.nativeElement.toDataURL();
   }
   captureFile($event) {
